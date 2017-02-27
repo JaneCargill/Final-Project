@@ -5,5 +5,5 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable, :validatable
 
   has_many :friends
-  has_many :friend, through: :friends, source: :user
+  has_many :pals, through: :friends, source: :user
 end

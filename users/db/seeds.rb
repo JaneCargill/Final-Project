@@ -1,6 +1,14 @@
 User.delete_all()
 Friend.delete_all()
 
+user_one = User.create(
+{
+  name: 'Jane',
+  email: 'jane@email.com',
+  password: 'password',
+  password_confirmation: 'password'
+  })
+
 user_two = User.create(
 {
   name: 'Ruth',
@@ -20,4 +28,8 @@ user_three = User.create(
 user_two.friends.create(
 {
   friend: user_three.name
+  })
+
+user_one.friends.create({
+  friend: user_two.name
   })

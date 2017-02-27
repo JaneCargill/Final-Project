@@ -5,5 +5,17 @@ class UsersController < ApplicationController
     render ({ json: current_user })
   end
 
+  def show
+    users = User.all
+    render json: users
+  end
+
+  # def create
+  #   user = User.create( sign_up_params )
+  #   render json: user, status: :created
+  # end
+
+  
+
   
 end
