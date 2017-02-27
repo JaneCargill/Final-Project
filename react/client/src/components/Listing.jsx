@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, browserHistory } from 'react-router'
 import Friend from './Friend'
+import AddFriend from './AddFriend'
 
 class Listing extends React.Component {
 
@@ -9,7 +10,8 @@ class Listing extends React.Component {
     this.doSearch = this.doSearch.bind(this)
     this.state = { 
       searchQuery: '', 
-      friends: [] 
+      friends: [],
+      addFriend: null
     }
   }
 
@@ -23,9 +25,8 @@ class Listing extends React.Component {
 
     request.onload = () => {
        if(request.status === 200){
-        console.log("request: ", request.responseText)
+        // console.log("request: ", request.responseText)
         var data = JSON.parse(request.responseText)
-        console.log('state', data)
         this.setState( { friends: data } )
        } else{
         console.log("Uh oh you're not logged in!")
@@ -39,15 +40,26 @@ class Listing extends React.Component {
     this.setState({searchQuery: event.target.value})
   }
 
+  setFriendToAdd(user) {
+    this.setState({addFriend: user});
+  }
+
+  handleClick() {
+    var friend = this.state.addFriend;
+    this.state.friends.push(friend);
+  }
+
   render(){
+    console.log('friends: ', this.state.friends)
     return(
       <div className="listing">
         <nav>
           <Link to='/' className='title'>Meeter Upper</Link>
-          <input className='search-box' type='text' placeholder='Search...' value={this.state.searchQuery} onChange={this.doSearch} />
+          
         </nav>
 
         <div className='friends-container'>
+        <input className='search-box' type='text' placeholder='Search Friends...' value={this.state.searchQuery} onChange={this.doSearch} />
           {
             this.state.friends.filter((friend) => `${friend.friend}`.toUpperCase().indexOf(this.state.searchQuery.toUpperCase()) >= 0)
              .map((friend) => (
@@ -55,6 +67,8 @@ class Listing extends React.Component {
             ))
 
           }
+            <button onClick={this.handleClick.bind(this)}>Add Friend</button>
+            <AddFriend selectFriend={this.setFriendToAdd.bind(this)}/>
         </div>
       
       </div>
