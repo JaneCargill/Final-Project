@@ -1,6 +1,7 @@
 class FriendsController < ApplicationController
   before_action :authenticate_user!
-  
+
+
   def index
     friends = Friend.where({
       user_id: current_user.id
@@ -17,4 +18,13 @@ class FriendsController < ApplicationController
       })
   end
 
+  def create
+    friend = Friend.create(friends_params())
+    render :json => friend.to_json
+  end
+
+  private
+  def friends_params 
+    params.require(:friends).permit(:friend, :user_id)
+  end
 end

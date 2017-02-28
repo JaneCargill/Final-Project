@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, browserHistory } from 'react-router'
 import Friend from './Friend'
+import GetFriend from './GetFriend'
 import AddFriend from './AddFriend'
 
 class Listing extends React.Component {
@@ -11,11 +12,16 @@ class Listing extends React.Component {
     this.state = { 
       searchQuery: '', 
       friends: [],
-      addFriend: null
+      addFriend: null,
+      currentUserID: null
     }
   }
 
   componentDidMount(){
+    this.getData();
+  }
+
+  getData() {
     var url = 'http://localhost:5000/api/friends'
     var request = new XMLHttpRequest()
     request.open('GET', url)
@@ -25,9 +31,10 @@ class Listing extends React.Component {
 
     request.onload = () => {
        if(request.status === 200){
-        // console.log("request: ", request.responseText)
+        console.log("request: ", request.responseText)
         var data = JSON.parse(request.responseText)
-        this.setState( { friends: data } )
+        this.setState( { friends: data, currentUserID: data[0].user_id} )
+    console.log('friends id: ', data)
        } else{
         console.log("Uh oh you're not logged in!")
         browserHistory.goBack()
@@ -36,21 +43,41 @@ class Listing extends React.Component {
     request.send(null)
   }
 
+  selectFriendToAdd(event){
+    var url = 'http://localhost:5000/api/friends.json'
+    event.preventDefault();
+    const request = new XMLHttpRequest();
+    request.open('POST', url );
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.withCredentials = true;
+
+    request.onload = () => {
+      if (request.status === 201) {
+        const user = JSON.parse(request.responseText);
+        console.log('user to add: ', user);
+        this.state.friend(user);
+      }
+    }
+    const data = {
+      friends: {
+        friend: this.state.addFriend,
+        user_id: this.state.currentUserID}
+      }
+  
+  request.send(JSON.stringify(data))
+  this.getData();
+  }
+
   doSearch(event){
     this.setState({searchQuery: event.target.value})
   }
 
   setFriendToAdd(user) {
-    this.setState({addFriend: user});
-  }
+    this.setState({addFriend: user.name});
 
-  handleClick() {
-    var friend = this.state.addFriend;
-    this.state.friends.push(friend);
   }
 
   render(){
-    console.log('friends: ', this.state.friends)
     return(
       <div className="listing">
         <nav>
@@ -62,13 +89,14 @@ class Listing extends React.Component {
         <input className='search-box' type='text' placeholder='Search Friends...' value={this.state.searchQuery} onChange={this.doSearch} />
           {
             this.state.friends.filter((friend) => `${friend.friend}`.toUpperCase().indexOf(this.state.searchQuery.toUpperCase()) >= 0)
-             .map((friend) => (
-              <Friend { ...friend } key={friend.user_id}/>
+             .map((friend, index) => (
+              <Friend { ...friend } key={index}/>
             ))
 
           }
-            <button onClick={this.handleClick.bind(this)}>Add Friend</button>
-            <AddFriend selectFriend={this.setFriendToAdd.bind(this)}/>
+            
+            <GetFriend selectFriend={this.setFriendToAdd.bind(this)}/>
+            <button id='add-button' onClick={this.selectFriendToAdd.bind(this)}>Add Friend</button>
         </div>
       
       </div>

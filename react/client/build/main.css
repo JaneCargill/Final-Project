@@ -14,6 +14,7 @@ h1, h2, h4 {
 }
 
 .container{  
+  border: 1px blue dotted;
   width: 100%;
   height: 100vh;
   display: flex;
@@ -42,11 +43,13 @@ h1, h2, h4 {
 
 
 .listing{
+  border: 1px red dotted;
   width: 100%;
   height: 100vh;
 }
 
 nav{
+  border: 1px black dotted;
   display: flex;
   /*align-items: center;*/
   background: lightseagreen;
@@ -55,7 +58,9 @@ nav{
 }
 
 .friends-container{
+  border: 1px yellow dotted;
   margin-left: 10px;
+
 }
 
 .search-box{
@@ -82,7 +87,7 @@ nav{
 
 button{
   padding: 10px 50px;
-  margin 20px 0;
+  /*margin 20px 0;*/
   color: PapayaWhip;
   background-color: #333;
   font-size: 15px;
@@ -92,5 +97,22 @@ button{
 button:hover{
   background-color: darkslategrey;
   cursor: pointer;
+}
+
+#add-button{
+  padding: 5px 10px;
+  font-size: 10px;
+  margin-top: 20px;
+  display: flex;
+  align-items: left
+}
+
+#users{
+  padding: 5px 10px;
+  font-size: 10px;
+  margin-top: 10px;
+  width: 70px;
+  display: flex;
+  align-items: left
 }
 
