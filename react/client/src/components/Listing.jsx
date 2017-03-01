@@ -16,7 +16,8 @@ class Listing extends React.Component {
       currentUserID: null,
       currentUser: null,
       coords: {lat: 56.838555, lon: -2.544076},
-      location: null
+      postCode: null,
+      pcLocation: {lat: null, lon: null}
     }
   }
 
@@ -32,8 +33,9 @@ class Listing extends React.Component {
       request.onload = () => {
          if(request.status === 200){
           var data = JSON.parse(request.responseText)
-          // console.log("user data ", data)
-          this.setState( { currentUser: data.name, currentUserID: data.id } )
+          console.log(data.location)
+          this.setState( { currentUser: data.name, currentUserID: data.id, postCode: data.location } )
+          this.getLocation();
          } else{
           console.log("Uh oh you're not logged in!")
           browserHistory.goBack()
@@ -86,7 +88,7 @@ class Listing extends React.Component {
       }
   
   request.send(JSON.stringify(data))
-  this.getData();
+  // this.getData();
   }
 
   doSearch(event){
@@ -98,9 +100,24 @@ class Listing extends React.Component {
 
   }
 
+  getLocation() {  
+    console.log('pc', this.state.postCode)
+    var url = 'https://maps.googleapis.com/maps/api/geocode/json?components=postal_code:' + this.state.postCode;
+    var request = new XMLHttpRequest();
+    request.open('GET', url);
+    request.onload = function() {
+      if(request.status === 200) {
+        var data = JSON.parse(request.responseText);
+        console.log('data', data.results[0].geometry.location.lat)
+        this.setState({pcLocation: {lat: data.results[0].geometry.location.lat, lon: data.results[0].geometry.location.lng}});
+      }
+    }.bind(this)
+    request.send();
+  }
+
   render(){
     // console.log('current friends', this.state.currentUser)
-    // console.log('add friend', this.state.addFriend)
+    console.log('pc location', this.state.pcLocation)
     return(
       <div >
         <nav>
@@ -122,7 +139,7 @@ class Listing extends React.Component {
             <button id='add-button' onClick={this.selectFriendToAdd.bind(this)}>Add Friend</button>
         </div>
         <div className='map-container'>
-          <GetMap coords={this.state.coords}/>
+          <GetMap coords={this.state.pcLocation}/>
         </div>
       </div>
       </div>

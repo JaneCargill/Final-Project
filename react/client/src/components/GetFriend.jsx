@@ -14,7 +14,6 @@ class GetFriend extends React.Component {
 
   handleChange(event) {
     var newIndex = event.target.value;
-    console.log('index', newIndex)
     this.setState({selectedIndex: newIndex});
     this.props.selectFriend(this.state.users[newIndex])
   }
