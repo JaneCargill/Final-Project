@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, browserHistory } from 'react-router'
 import Friend from './Friend'
 import GetFriend from './GetFriend'
-import AddFriend from './AddFriend'
+import GetMap from './GetMap'
 
 class Listing extends React.Component {
 
@@ -13,13 +13,33 @@ class Listing extends React.Component {
       searchQuery: '', 
       friends: [],
       addFriend: null,
-      currentUserID: null
+      currentUserID: null,
+      currentUser: null,
+      coords: {lat: 56.838555, lon: -2.544076}
     }
   }
 
   componentDidMount(){
     this.getData();
-  }
+      var url = 'http://localhost:5000/api/users'
+      var request = new XMLHttpRequest()
+      request.open('GET', url)
+
+      request.setRequestHeader('Content-Type', "application/json")
+      request.withCredentials = true
+
+      request.onload = () => {
+         if(request.status === 200){
+          var data = JSON.parse(request.responseText)
+          // console.log("user data ", data)
+          this.setState( { currentUser: data.name, currentUserID: data.id } )
+         } else{
+          console.log("Uh oh you're not logged in!")
+          browserHistory.goBack()
+         }
+      }
+      request.send(null)
+    }
 
   getData() {
     var url = 'http://localhost:5000/api/friends'
@@ -31,10 +51,10 @@ class Listing extends React.Component {
 
     request.onload = () => {
        if(request.status === 200){
-        console.log("request: ", request.responseText)
+        // console.log("request: ", request.responseText)
         var data = JSON.parse(request.responseText)
-        this.setState( { friends: data, currentUserID: data[0].user_id} )
-    console.log('friends id: ', data)
+    // console.log('friends id: ', data)
+        this.setState( { friends: data })
        } else{
         console.log("Uh oh you're not logged in!")
         browserHistory.goBack()
@@ -54,7 +74,7 @@ class Listing extends React.Component {
     request.onload = () => {
       if (request.status === 201) {
         const user = JSON.parse(request.responseText);
-        console.log('user to add: ', user);
+        // console.log('user to add: ', user);
         this.state.friend(user);
       }
     }
@@ -78,13 +98,15 @@ class Listing extends React.Component {
   }
 
   render(){
+    // console.log('current friends', this.state.currentUser)
+    // console.log('add friend', this.state.addFriend)
     return(
-      <div className="listing">
+      <div >
         <nav>
           <Link to='/' className='title'>Meeter Upper</Link>
           
         </nav>
-
+        <div className="listing">
         <div className='friends-container'>
         <input className='search-box' type='text' placeholder='Search Friends...' value={this.state.searchQuery} onChange={this.doSearch} />
           {
@@ -95,10 +117,13 @@ class Listing extends React.Component {
 
           }
             
-            <GetFriend selectFriend={this.setFriendToAdd.bind(this)}/>
+            <GetFriend friends={this.state.friends} currentUser={this.state.currentUser} selectFriend={this.setFriendToAdd.bind(this)}/>
             <button id='add-button' onClick={this.selectFriendToAdd.bind(this)}>Add Friend</button>
         </div>
-      
+        <div className='map-container'>
+          <GetMap coords={this.state.coords}/>
+        </div>
+      </div>
       </div>
     )
   }

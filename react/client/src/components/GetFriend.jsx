@@ -40,10 +40,33 @@ class GetFriend extends React.Component {
     request.send(null)
   }
 
+  noRepeatFriends() {
+   var array = this.state.users
+   var users = this.state.users
+   var friends = this.props.friends
+   var cu = this.props.currentUser
+    // console.log('state', this.props.friends)
+    console.log('cu', cu)
+   // friends.push(this.props.currentUser)
+
+   for(var user of users) {
+    var index = array.indexOf(user)
+     for (var f of friends) {
+       if (user.name === f.friend) {
+         array.splice(index, 1)
+       }
+     }
+   }
+   var filtered = array.filter(function(user) {
+      return (user.name !== cu)
+   })
+    return filtered
+  }
+
 
   render(){
-    // console.log('state', this.state.selectedIndex)
-    var options = this.state.users.map(function(user, index) {
+        var users = this.noRepeatFriends();
+    var options = users.map(function(user, index) {
     return <option value={index} key={index}>{user.name}</option>
         });
     return (

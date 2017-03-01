@@ -17,7 +17,7 @@ class SignOut extends React.Component{
    request.withCredentials = true;
 
    request.onload = () => {
-    console.log('signed out', request.status);
+    // console.log('signed out', request.status);
     if (request.status === 204) {
     this.props.onSignOut(null);
     }
