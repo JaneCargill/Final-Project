@@ -45,9 +45,6 @@ class GetFriend extends React.Component {
    var users = this.state.users
    var friends = this.props.friends
    var cu = this.props.currentUser
-    // console.log('state', this.props.friends)
-    console.log('cu', cu)
-   // friends.push(this.props.currentUser)
 
    for(var user of users) {
     var index = array.indexOf(user)

@@ -4,6 +4,7 @@ Friend.delete_all()
 user_one = User.create(
 {
   name: 'Jane',
+  location: 'EH8 9QN',
   email: 'jane@email.com',
   password: 'password',
   password_confirmation: 'password'

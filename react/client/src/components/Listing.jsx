@@ -15,7 +15,8 @@ class Listing extends React.Component {
       addFriend: null,
       currentUserID: null,
       currentUser: null,
-      coords: {lat: 56.838555, lon: -2.544076}
+      coords: {lat: 56.838555, lon: -2.544076},
+      location: null
     }
   }
 
