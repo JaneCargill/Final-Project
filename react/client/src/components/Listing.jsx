@@ -3,6 +3,7 @@ import { Link, browserHistory } from 'react-router'
 import Friend from './Friend'
 import GetFriend from './GetFriend'
 import GetMap from './GetMap'
+import UpdateLocation from './UpdateLocation'
 
 class Listing extends React.Component {
 
@@ -17,7 +18,8 @@ class Listing extends React.Component {
       currentUser: null,
       coords: {lat: 56.838555, lon: -2.544076},
       postCode: null,
-      pcLocation: {lat: null, lon: null}
+      pcLocation: {lat: null, lon: null},
+      email: null
     }
   }
 
@@ -34,7 +36,7 @@ class Listing extends React.Component {
          if(request.status === 200){
           var data = JSON.parse(request.responseText)
           console.log(data.location)
-          this.setState( { currentUser: data.name, currentUserID: data.id, postCode: data.location } )
+          this.setState( { currentUser: data.name, currentUserID: data.id, email: data.email, postCode: data.location } )
           this.getLocation();
          } else{
           console.log("Uh oh you're not logged in!")
@@ -114,14 +116,28 @@ class Listing extends React.Component {
     }.bind(this)
     request.send();
   }
+ 
+
+  // handleOnChangeLocation(event) {
+  //   console.log('pc', event.target.value);
+  //    event.target.value;
+  // }
+
+  // handleClick() {
+  //   var updatePostCode = this.state.input;
+  //   // this.setState({pcLocation: updatePostCode});
+  // }
 
   render(){
     // console.log('current friends', this.state.currentUser)
-    console.log('pc location', this.state.pcLocation)
+    console.log('cu', this.state.friends)
     return(
       <div >
         <nav>
           <Link to='/' className='title'>Meeter Upper</Link>
+          
+          <UpdateLocation email={this.state.email} userName={this.state.currentUser}/>
+          
           
         </nav>
         <div className="listing">
@@ -139,7 +155,7 @@ class Listing extends React.Component {
             <button id='add-button' onClick={this.selectFriendToAdd.bind(this)}>Add Friend</button>
         </div>
         <div className='map-container'>
-          <GetMap coords={this.state.pcLocation}/>
+          <GetMap friends={this.state.friends} coords={this.state.pcLocation}/>
         </div>
       </div>
       </div>

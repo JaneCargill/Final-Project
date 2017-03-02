@@ -14,14 +14,13 @@ class GetMap extends React.Component {
 
 componentWillReceiveProps(nextprops) {
 
-    console.log('props coord', nextprops.coords)
     this.setState({coords: nextprops.coords}, this.createMapAndMarker)
 }
 
 render() {
  
+    console.log(this.props.friends)
   return(
-
    <div className="GMap">
    <div className= "GMap" ref="map_canvas">
    </div>
@@ -30,23 +29,18 @@ render() {
 }
 
 componentDidMount(){
-  console.log('state2', this.state)
   this.createMapAndMarker();
-  // var newMap = this.createMap();
-  // this.setState({map: newMap});
-  // this.createMarker();
+ 
 }
 
 createMapAndMarker() {
   var newMap = this.createMap();
   this.setState({map: newMap}, this.createMarker);
-  // this.createMap();
-  // this.createMarker();
+
 }
 
 
 createMap() {
-    console.log('state', this.state.coords) 
   var coords = this.props.coords
   var mapOptions = {
     minZoom: 10,
@@ -57,7 +51,6 @@ createMap() {
   }
 
   createMarker() {
-    console.log('help', this.state)
    var marker = new google.maps.Marker({
     position: new google.maps.LatLng(this.state.coords.lat, this.state.coords.lon),
     map: this.state.map,

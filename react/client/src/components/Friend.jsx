@@ -5,6 +5,7 @@ const Friend = (props) => (
     <div className='friend-details'>
     <h3 className='friend-title'></h3>
       <p className='friend-name'>{props.friend}</p>
+      <p className='get-location'>Get Location</p>
     </div>
   </div>
 )
